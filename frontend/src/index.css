@@ -18,3 +18,11 @@ body {
 .font-serif {
   font-family: 'Roboto', serif;
 }
+
+.text-navColor {
+  @apply text-[rgb(132,125,148)]
+}
+
+.hover\:text-hoverColor:hover {
+  @apply text-[rgb(219,179,169)];
+}

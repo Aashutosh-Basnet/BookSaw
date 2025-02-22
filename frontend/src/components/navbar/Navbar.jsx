@@ -3,7 +3,7 @@ import Topbar from "./Topbar"
 
 const Navbar = () => {
   return (
-    <div className="absolute top-0">
+    <div className=" w-full">
         <Topbar/>
         <Bottombar/>
     </div>
