@@ -8,7 +8,6 @@ const Bottombar = () => {
         { "text": "POPULAR", "to": "popular" },
         { "text": "OFFER", "to": "offer" },
         { "text": "ARTICLES", "to": "articles" },
-        { "text": "DOWNLOAD APP", "to": "download" },
         { "text": "LOGIN/REGISTER", "to": "loginRegister" },
     ];
 
