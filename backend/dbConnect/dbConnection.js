@@ -5,7 +5,7 @@ dotenv.config();
 
 const dbConnect = async() => {
     try{
-        await mongoose.connect(process.env.CONNECTION_URL);
+        await mongoose.connect('mongodb://127.0.0.1:27017/booksaw');
         console.log("Database has been connected successfully!");
     }catch (error) {
         console.log(error);

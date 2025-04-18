@@ -26,17 +26,17 @@ const Topbar = () => {
         },
       ];
   return (
-    <div className="w-screen border-b-1 border-slate-300 flex justify-between">
-        <div className="flex gap-4 p-5 pb-8 text-md">
+    <div className="w-screen border-b-1 border-slate-300 flex flex-col sm:flex-row justify-between">
+        <div className="flex gap-4 p-3 sm:p-5 pb-4 sm:pb-8 text-md">
             {
                 socials.map(({social, link}, index)=> (
-                   <a href={link} key={index}>{social}</a>
+                   <a href={link} key={index} className="hover:text-amber-300 transition-colors duration-300">{social}</a>
                 ))
             }
         </div>
-        <div className="flex p-5 gap-5 mr-5">
-            <div className="flex items-center gap-2 cursor-pointer"><RiAccountPinCircleLine />Account</div>
-            <div className="flex items-center gap-2 cursor-pointer"><BsCartDash />Cart</div>
+        <div className="flex p-3 sm:p-5 gap-3 sm:gap-5 mr-3 sm:mr-5 flex-wrap justify-center sm:justify-end">
+            <div className="flex items-center gap-2 cursor-pointer hover:text-amber-300 transition-colors duration-300"><RiAccountPinCircleLine />Account</div>
+            <div className="flex items-center gap-2 cursor-pointer hover:text-amber-300 transition-colors duration-300"><BsCartDash />Cart</div>
             <Search/>
         </div>
     </div>

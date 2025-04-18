@@ -6,6 +6,10 @@ const bookSchema = new Schema({
         type: String,
         required: true,
     },
+    subtitle: {
+        type: String,
+        default: "",
+    },
     description: {
         type: String,
         required: true,
@@ -15,7 +19,7 @@ const bookSchema = new Schema({
         required: true,
     },
     author: {
-        type: String,
+        type: [String]  ,
         required: true,
     },
     published_year: {
@@ -30,9 +34,17 @@ const bookSchema = new Schema({
         type: Number,
         default: 0,
     },
+    average_rating: {
+        type: Number,
+        default: 0,
+    },
     num_pages: {
         type: Number,
         default: 0,
+    },
+    thumbnail: {
+        type: String,
+        default: "",
     },
 })
 
