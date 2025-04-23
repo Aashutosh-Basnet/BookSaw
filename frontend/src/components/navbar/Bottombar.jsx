@@ -9,12 +9,12 @@ const Bottombar = () => {
     const { user, logout } = useAuth();
     
     const navLists = [
-        { "text": "HOME", "to": "home", "type": "scroll" },
-        { "text": "PAGES", "to": "pages", "type": "scroll" },
-        { "text": "FEATURED", "to": "featured", "type": "scroll" },
-        { "text": "POPULAR", "to": "popular", "type": "scroll" },
-        { "text": "OFFER", "to": "offer", "type": "scroll" },
-        { "text": "ARTICLES", "to": "articles", "type": "scroll" },
+        { "text": "HOME", "to": "/", "type": "route" },
+        { "text": "BOOKS", "to": "/search", "type": "route" },
+        { "text": "FEATURED", "to": "/search?category=featured", "type": "route" },
+        { "text": "POPULAR", "to": "/search?category=popular", "type": "route" },
+        { "text": "OFFERS", "to": "/search?category=offer", "type": "route" },
+        { "text": "ORDERS", "to": "/orders", "type": "route" },
     ];
 
     const handleLogout = () => {
