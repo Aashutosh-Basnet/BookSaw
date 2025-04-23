@@ -1,7 +1,9 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const BooksWithOffer = () => {
   const [hoveredBook, setHoveredBook] = useState(null);
+  const navigate = useNavigate();
 
   const booksWithOffers = [
     {
@@ -46,6 +48,10 @@ const BooksWithOffer = () => {
     }
   ];
 
+  const handleViewDetails = (bookId) => {
+    navigate(`/book/${bookId}`);
+  };
+
   return (
     <div className="container mx-auto px-4 py-16">
       <div className="text-center mb-12">
@@ -57,9 +63,10 @@ const BooksWithOffer = () => {
         {booksWithOffers.map((book) => (
           <div 
             key={book.id}
-            className="relative bg-white rounded-lg shadow-lg overflow-hidden transform transition-all duration-300 hover:-translate-y-2"
+            className="relative bg-white rounded-lg shadow-lg overflow-hidden transform transition-all duration-300 hover:-translate-y-2 cursor-pointer"
             onMouseEnter={() => setHoveredBook(book.id)}
             onMouseLeave={() => setHoveredBook(null)}
+            onClick={() => handleViewDetails(book.id)}
           >
             {/* Offer Badge */}
             <div className="absolute top-4 left-4 z-10">
@@ -86,7 +93,13 @@ const BooksWithOffer = () => {
               {/* Hover Overlay */}
               {hoveredBook === book.id && (
                 <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center transition-opacity duration-300">
-                  <button className="bg-white text-gray-900 px-6 py-3 rounded-full font-bold hover:bg-opacity-90 transition-colors">
+                  <button 
+                    className="bg-white text-gray-900 px-6 py-3 rounded-full font-bold hover:bg-opacity-90 transition-colors"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleViewDetails(book.id);
+                    }}
+                  >
                     View Details
                   </button>
                 </div>

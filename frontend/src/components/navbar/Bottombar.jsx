@@ -1,56 +1,99 @@
-import { Link } from 'react-scroll';
+import { Link as ScrollLink } from 'react-scroll';
+import { Link as RouterLink } from 'react-router-dom';
 import { useState } from 'react';
 import { FaBars, FaTimes } from 'react-icons/fa';
+import { useAuth } from '../../context/AuthContext';
 
 const Bottombar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const { user, logout } = useAuth();
     
     const navLists = [
-        { "text": "HOME", "to": "home" },
-        { "text": "PAGES", "to": "pages" },
-        { "text": "FEATURED", "to": "featured" },
-        { "text": "POPULAR", "to": "popular" },
-        { "text": "OFFER", "to": "offer" },
-        { "text": "ARTICLES", "to": "articles" },
-        { "text": "LOGIN/REGISTER", "to": "loginRegister" },
+        { "text": "HOME", "to": "home", "type": "scroll" },
+        { "text": "PAGES", "to": "pages", "type": "scroll" },
+        { "text": "FEATURED", "to": "featured", "type": "scroll" },
+        { "text": "POPULAR", "to": "popular", "type": "scroll" },
+        { "text": "OFFER", "to": "offer", "type": "scroll" },
+        { "text": "ARTICLES", "to": "articles", "type": "scroll" },
     ];
 
-  return (
-    <div className="w-screen border-b-1 border-slate-300">
-        <div className='flex justify-between items-center'>
-            <div className="p-4">
-                <h1 className="font-merriweather text-3xl sm:text-4xl font-extralight"><b className="font-semibold">BOOK</b>SAW</h1>
-            </div>
-            
-            {/* Mobile menu button */}
-            <button 
-                className="p-4 md:hidden"
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-            >
-                {isMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
-            </button>
+    const handleLogout = () => {
+        logout();
+    };
 
-            {/* Desktop Navigation */}
-            <div className='hidden md:flex p-4 text-navColor'>
-                {
-                    navLists.map(({ text, to }, index) => {
-                        return (
-                            <Link key={index} to={to} smooth={true} duration={300} className="px-4 py-2 hover:text-amber-300 cursor-pointer transition-colors duration-300">
+    const renderAuthLinks = () => {
+        if (user) {
+            return (
+                <button
+                    onClick={handleLogout}
+                    className="px-4 py-2 hover:text-amber-300 cursor-pointer transition-colors duration-300"
+                >
+                    LOGOUT
+                </button>
+            );
+        }
+        return (
+            <>
+                <RouterLink to="/login" className="px-4 py-2 hover:text-amber-300 cursor-pointer transition-colors duration-300">
+                    LOGIN
+                </RouterLink>
+                <RouterLink to="/signup" className="px-4 py-2 hover:text-amber-300 cursor-pointer transition-colors duration-300">
+                    REGISTER
+                </RouterLink>
+            </>
+        );
+    };
+
+    return (
+        <div className="w-screen border-b-1 border-slate-300">
+            <div className='flex justify-between items-center'>
+                <div className="p-4">
+                    <h1 className="font-merriweather text-3xl sm:text-4xl font-extralight">
+                        <b className="font-semibold">BOOK</b>SAW
+                    </h1>
+                </div>
+                
+                {/* Mobile menu button */}
+                <button 
+                    className="p-4 md:hidden"
+                    onClick={() => setIsMenuOpen(!isMenuOpen)}
+                >
+                    {isMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
+                </button>
+
+                {/* Desktop Navigation */}
+                <div className='hidden md:flex p-4 text-navColor'>
+                    {navLists.map(({ text, to, type }, index) => {
+                        return type === "scroll" ? (
+                            <ScrollLink 
+                                key={index} 
+                                to={to} 
+                                smooth={true} 
+                                duration={300} 
+                                className="px-4 py-2 hover:text-amber-300 cursor-pointer transition-colors duration-300"
+                            >
                                 {text}
-                            </Link>
+                            </ScrollLink>
+                        ) : (
+                            <RouterLink 
+                                key={index} 
+                                to={to} 
+                                className="px-4 py-2 hover:text-amber-300 cursor-pointer transition-colors duration-300"
+                            >
+                                {text}
+                            </RouterLink>
                         );
-                    })
-                }
+                    })}
+                    {renderAuthLinks()}
+                </div>
             </div>
-        </div>
 
-        {/* Mobile Navigation */}
-        <div className={`md:hidden ${isMenuOpen ? 'block' : 'hidden'} bg-white`}>
-            <div className='flex flex-col p-4 text-navColor'>
-                {
-                    navLists.map(({ text, to }, index) => {
-                        return (
-                            <Link 
+            {/* Mobile Navigation */}
+            <div className={`md:hidden ${isMenuOpen ? 'block' : 'hidden'} bg-white`}>
+                <div className='flex flex-col p-4 text-navColor'>
+                    {navLists.map(({ text, to, type }, index) => {
+                        return type === "scroll" ? (
+                            <ScrollLink 
                                 key={index} 
                                 to={to} 
                                 smooth={true} 
@@ -59,14 +102,25 @@ const Bottombar = () => {
                                 onClick={() => setIsMenuOpen(false)}
                             >
                                 {text}
-                            </Link>
+                            </ScrollLink>
+                        ) : (
+                            <RouterLink 
+                                key={index} 
+                                to={to} 
+                                className="px-4 py-3 hover:text-amber-300 cursor-pointer transition-colors duration-300 border-b border-gray-100"
+                                onClick={() => setIsMenuOpen(false)}
+                            >
+                                {text}
+                            </RouterLink>
                         );
-                    })
-                }
+                    })}
+                    <div className="border-b border-gray-100">
+                        {renderAuthLinks()}
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-  );
+    );
 }
 
 export default Bottombar;

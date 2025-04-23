@@ -15,16 +15,16 @@ const BestSellingBook = () => {
         </div>
         <div className="w-[50%]">
             <div className="">
-                <h3 className="text-4xl font-merriweather my-5">Best Selling Book</h3>
+                <h3 className="text-xl md:text-4xl font-merriweather my-5">Best Selling Book</h3>
                 <span className="block w-[5%] border-b-2 border-black"></span>
             </div>
             <div className="my-5">
                 <p className="font-georgian text-navColor text-lg">By Paulo Coelho</p>
-                <h4 className="text-3xl font-merriweather mt-5">The Alchemist</h4>
-                <p className="my-10 text-navColor w-[80%] leading-relaxed">
+                <h4 className="text-xl md:text-3xl font-merriweather mt-5">The Alchemist</h4>
+                <p className="text-md md:text-lg my-10 text-navColor w-[80%] leading-relaxed">
                     A magical story about following your dreams. This enchanting novel has inspired millions of readers worldwide with its mystical journey of self-discovery. Follow Santiago, an Andalusian shepherd boy, as he travels in search of a worldly treasure and discovers something far more meaningful.
                 </p>
-                <div className="flex items-center gap-4 mb-6">
+                <div className="text-md md:text-lg flex items-center gap-4 mb-6">
                     <p className="text-2xl font-bold text-navColor">$16.99</p>
                     <span className="line-through text-gray-500">$24.99</span>
                     <span className="bg-red-100 text-red-600 px-3 py-1 rounded-full text-sm">32% OFF</span>

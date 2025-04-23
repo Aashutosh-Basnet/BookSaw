@@ -1,7 +1,9 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const PopularBooks = () => {
     const [selectedGenre, setSelectedGenre] = useState("All genre");
+    const navigate = useNavigate();
 
     const genres = [
         {
@@ -85,6 +87,10 @@ const PopularBooks = () => {
         ? books 
         : books.filter(book => book.genre === selectedGenre);
 
+    const handleBookClick = (bookId) => {
+        navigate(`/book/${bookId}`);
+    };
+
     return (
         <div className="container mx-auto px-4">
             <div className="flex flex-col items-center my-20">
@@ -115,7 +121,11 @@ const PopularBooks = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
                 {filteredBooks.map((book) => (
-                    <div key={book.id} className="flex flex-col items-center p-4 border rounded-lg shadow-lg hover:shadow-xl transition-shadow">
+                    <div 
+                        key={book.id} 
+                        className="flex flex-col items-center p-4 border rounded-lg shadow-lg hover:shadow-xl transition-shadow cursor-pointer"
+                        onClick={() => handleBookClick(book.id)}
+                    >
                         <img 
                             src={book.cover} 
                             alt={book.title}
@@ -124,9 +134,26 @@ const PopularBooks = () => {
                         <h3 className="text-xl font-semibold text-center">{book.title}</h3>
                         <p className="text-gray-600 mt-2">{book.author}</p>
                         <p className="text-navColor font-bold mt-2">${book.price}</p>
-                        <button className="mt-4 bg-navColor text-white px-6 py-2 rounded-full hover:bg-opacity-90 transition-colors">
-                            Add to Cart
-                        </button>
+                        <div className="flex gap-3 mt-4">
+                            <button 
+                                className="bg-navColor text-white px-6 py-2 rounded-full hover:bg-opacity-90 transition-colors"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    // Add to cart functionality would go here
+                                }}
+                            >
+                                Add to Cart
+                            </button>
+                            <button 
+                                className="border border-navColor text-navColor px-6 py-2 rounded-full hover:bg-navColor hover:text-white transition-colors"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleBookClick(book.id);
+                                }}
+                            >
+                                Details
+                            </button>
+                        </div>
                     </div>
                 ))}
             </div>

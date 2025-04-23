@@ -1,41 +1,56 @@
+import { useCart } from '../../context/CartContext';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 import { useState } from 'react';
+import { initiateEsewaPayment } from '../../api/paymentService';
 
 const Cart = () => {
-  const [cartItems, setCartItems] = useState([
-    {
-      id: 1,
-      title: "The Alchemist",
-      author: "Paulo Coelho",
-      price: 16.99,
-      originalPrice: 24.99,
-      cover: "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1579036753i/77203.jpg",
-      quantity: 1
-    },
-    {
-      id: 2,
-      title: "Tomorrow, and Tomorrow, and Tomorrow",
-      author: "Gabrielle Zevin",
-      price: 19.99,
-      originalPrice: 28.99,
-      cover: "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1636978687i/58784475.jpg",
-      quantity: 1
-    }
-  ]);
-
-  const updateQuantity = (id, newQuantity) => {
-    if (newQuantity < 1) return;
-    setCartItems(cartItems.map(item => 
-      item.id === id ? { ...item, quantity: newQuantity } : item
-    ));
-  };
-
-  const removeItem = (id) => {
-    setCartItems(cartItems.filter(item => item.id !== id));
-  };
+  const { cartItems, updateQuantity, removeItem } = useCart();
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
 
   const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   const shipping = 4.99;
   const total = subtotal + shipping;
+
+  const handleContinueShopping = () => {
+    navigate('/');
+  };
+
+  const handleEsewaCheckout = () => {
+    if (!user) {
+      navigate('/login', { state: { from: '/cart' } });
+      return;
+    }
+
+    if (cartItems.length === 0) {
+      alert('Your cart is empty. Add some items to proceed to checkout.');
+      return;
+    }
+
+    setIsProcessingPayment(true);
+
+    try {
+      // Generate a unique product ID for this transaction
+      const timestamp = new Date().getTime();
+      const productId = `ORDER_${user._id}_${timestamp}`;
+
+      // Prepare payment data for eSewa
+      const paymentData = {
+        amount: total.toFixed(2),
+        productId,
+        productName: `BookSaw Order (${cartItems.length} items)`
+      };
+
+      // Initiate eSewa payment
+      initiateEsewaPayment(paymentData);
+    } catch (error) {
+      console.error('Error initiating payment:', error);
+      setIsProcessingPayment(false);
+      alert('Failed to initiate payment. Please try again.');
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 py-8">
@@ -51,7 +66,10 @@ const Cart = () => {
             />
             <h2 className="text-2xl font-merriweather mb-4">Your cart is empty</h2>
             <p className="text-gray-600 mb-6">Looks like you haven't added any books to your cart yet.</p>
-            <button className="bg-navColor text-white px-8 py-3 rounded-full font-bold hover:bg-opacity-90 transition-colors">
+            <button 
+              onClick={handleContinueShopping}
+              className="bg-navColor text-white px-8 py-3 rounded-full font-bold hover:bg-opacity-90 transition-colors"
+            >
               Continue Shopping
             </button>
           </div>
@@ -126,17 +144,38 @@ const Cart = () => {
                     </div>
                   </div>
                 </div>
-                <button className="w-full bg-navColor text-white px-6 py-3 rounded-full font-bold mt-6 hover:bg-opacity-90 transition-colors">
-                  Proceed to Checkout
-                </button>
-                <div className="mt-6 text-center">
-                  <p className="text-sm text-gray-600 mb-2">Secure Checkout</p>
-                  <div className="flex justify-center gap-2">
-                    <img src="https://cdn-icons-png.flaticon.com/128/349/349221.png" alt="Visa" className="h-8" />
-                    <img src="https://cdn-icons-png.flaticon.com/128/349/349228.png" alt="Mastercard" className="h-8" />
-                    <img src="https://cdn-icons-png.flaticon.com/128/349/349230.png" alt="PayPal" className="h-8" />
-                  </div>
-                </div>
+                
+                {/* Checkout Button */}
+                {/* <button 
+                  onClick={handleEsewaCheckout}
+                  disabled={isProcessingPayment}
+                  className="w-full bg-green-600 text-white px-6 py-3 rounded-full font-bold mt-6 hover:bg-green-700 transition-colors disabled:opacity-50 flex items-center justify-center"
+                > */}
+                <a href="https://payment-gateway-mu-gold.vercel.app/esewa-payment" className='w-full bg-green-60 py-3'
+                   
+                >
+                  {isProcessingPayment ? (
+                    <>
+                      <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      Processing...
+                    </>
+                  ) : (
+                    <>
+                      <img 
+                        src="https://esewa.com.np/common/images/esewa_logo.png" 
+                        alt="eSewa" 
+                        className="h-5 mr-2"
+                      />
+                      Checkout with eSewa
+                    </>
+                  )}
+                {/* </button> */}
+                </a>
+
+                
               </div>
             </div>
           </div>

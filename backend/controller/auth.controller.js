@@ -1,8 +1,8 @@
 import bcrypt from "bcrypt";
-import jwt from ("jsonwebtoken");
-import User from "./Models/user.model.js";
+import jwt from "jsonwebtoken";
+import User from '../Models/user.model.js';
 
-const register = async(req, res) => {
+export const register = async(req, res) => {
     try {
 
         const hashedPassword = bcrypt.hashSync(req.body.password, 10);
@@ -30,7 +30,7 @@ const register = async(req, res) => {
     }
 }
 
-const login = async(req, res) => {
+export const login = async(req, res) => {
     try {
         const user = await User.findOne({
             email: req.body.email
@@ -77,5 +77,3 @@ const login = async(req, res) => {
         });
     }
 }
-
-export default {login, register};
